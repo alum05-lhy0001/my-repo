@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Max List Stats</title>
+  <style>body{font-family:Segoe UI,Arial;background:#f7f7f7;padding:20px} .card{background:#fff;padding:18px;border-radius:8px;max-width:560px;box-shadow:0 6px 18px rgba(0,0,0,0.06)} input,button{font-size:16px;padding:8px;margin:6px 0;width:100%} #result{margin-top:12px;font-weight:600}</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Max List Stats</h1>
+    <p>Enter numbers separated by space or newline. Click <strong>Compute M</strong> to output full statistics, or <strong>Compute N</strong> for minimum only.</p>
+    <textarea id="input" rows="6" placeholder="e.g. 1 2 3 4 5"></textarea>
+    <button id="computeM">Compute M (full stats)</button>
+    <button id="computeN">Compute N (minimum)</button>
+    <pre id="result"></pre>
+  </div>
+
+  <script>
+    function fmt(d){ if(!isFinite(d)) return String(d); let s = d.toFixed(6); s = s.replace(/(\.\d*?)0+$/, '$1'); s = s.replace(/\.$/,''); return s; }
+    function analyze(arr){ const state={max:-Infinity,min:Infinity,haveNumber:false,count:0,sum:0,mean:0,m2:0,freq:{}}; for(const v of arr){ const val=Number(v); if(!isFinite(val)) continue; if(!state.haveNumber){state.max=state.min=val;state.haveNumber=true;} else { if(val>state.max) state.max=val; if(val<state.min) state.min=val; } state.count++; state.sum+=val; const delta=val-state.mean; state.mean+=delta/state.count; state.m2+=delta*(val-state.mean); state.freq[String(val)]=(state.freq[String(val)]||0)+1; } return state; }
+    function modesFrom(freq){ let best=0; const modes=[]; for(const k in freq){ const v=freq[k]; if(v>best){best=v;modes.length=0;modes.push(Number(k));} else if(v===best) modes.push(Number(k)); } return {best,modes}; }
+    document.getElementById('computeM').addEventListener('click', ()=>{ const txt=document.getElementById('input').value; const tokens=txt.trim().split(/\s+/); const s=analyze(tokens); const out=document.getElementById('result'); if(!s.haveNumber){ out.textContent='No numbers were entered.'; return;} const avg=s.mean; const variance=(s.count>0)?(s.m2/s.count):0; const stddev=Math.sqrt(variance); let res='Maximum = '+fmt(s.max)+'\n'; res+='Minimum = '+fmt(s.min)+'\n'; res+='Sum = '+fmt(s.sum)+'\n'; res+='Count = '+s.count+'\n'; res+='Average = '+fmt(avg)+'\n'; res+='Variance (population) = '+fmt(variance)+'\n'; res+='Standard deviation (population) = '+fmt(stddev)+'\n'; const {best,modes}=modesFrom(s.freq); if(best<=1) res+='Mode: none (all values are unique)\n'; else res+='Mode(s) (frequency='+best+'): '+modes.map(fmt).join(', ')+'\n'; out.textContent=res; });
+    document.getElementById('computeN').addEventListener('click', ()=>{ const txt=document.getElementById('input').value; const tokens=txt.trim().split(/\s+/); const s=analyze(tokens); const out=document.getElementById('result'); if(!s.haveNumber) { out.textContent='No numbers were entered.'; return; } out.textContent='Minimum = '+fmt(s.min); });
+  </script>
+</body>
+</html>

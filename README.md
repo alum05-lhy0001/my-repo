@@ -5,6 +5,8 @@ This folder contains a Java example (`Prime.java`) and two JavaScript variants t
 - `Prime.js` — Node.js interactive CLI that prompts for a number and prints whether it's prime and its factors.
 - `prime.html` — Simple browser page suitable for deploying to GitHub Pages.
 
+- `Calculator.js` — Node.js CLI port of `CalculatorS.java` (supports interactive mode and `node Calculator.js <num1> <op> <num2>`).
+
 How to run (Node)
 
 1. Install Node.js if you don't have it: https://nodejs.org/
@@ -27,6 +29,52 @@ node Prime.js
 ```powershell
 node Prime.js 17
 ```
+
+Calculator usage
+
+- Interactive mode:
+
+```powershell
+node Calculator.js
+```
+
+- CLI mode:
+
+```powershell
+node Calculator.js 3 + 4
+```
+
+- JSON output for automation:
+
+```powershell
+node Calculator.js 10 divide 2 --json
+```
+
+Browser UI
+
+You can open `calculator.html` in a browser (or deploy it with GitHub Pages). The page provides a small UI to enter two numbers and select an operator.
+
+To open locally, in PowerShell run:
+
+```powershell
+start "" "calculator.html"
+```
+
+Or open the file directly from your file manager.
+
+Max_List (stats)
+
+- `Max_List.js` — Node.js interactive port of `Max_List.java` that accepts tokens and supports `M` and `N`. Example:
+
+```powershell
+# interactive
+node Max_List.js
+
+# or pass tokens and JSON
+node Max_List.js 1 2 2 3 M --json
+```
+
+- `max_list.html` — browser UI for entering numbers and computing statistics (good for GitHub Pages).
 
 - JSON output (useful for automation):
 
