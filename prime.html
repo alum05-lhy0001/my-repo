@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Prime Checker</title>
+  <style>body{font-family:Segoe UI,Arial;background:#f7f7f7;padding:20px}input,button{font-size:16px;padding:6px}#result{margin-top:12px;font-weight:600}</style>
+</head>
+<body>
+  <h1>Prime Checker</h1>
+  <label for="num">Enter a number:</label>
+  <input id="num" type="number" step="1" />
+  <button id="check">Check</button>
+  <div id="result" aria-live="polite"></div>
+
+  <script>
+    function isPrime(n) {
+      n = Number(n);
+      if (!Number.isInteger(n)) return {isPrime:false,factors:[]};
+      if (n <= 1) return {isPrime:false,factors:getFactors(n)};
+      for (let i=2;i<=Math.sqrt(n);i++) {
+        if (n % i === 0) return {isPrime:false,factors:getFactors(n)};
+      }
+      return {isPrime:true,factors:[]};
+    }
+    function getFactors(n){
+      const f=[]; for(let i=1;i<=n;i++) if(n%i===0) f.push(i); return f;
+    }
+    document.getElementById('check').addEventListener('click', ()=>{
+      const val = document.getElementById('num').value;
+      const n = parseInt(val,10);
+      if (isNaN(n)) { document.getElementById('result').textContent = 'Please enter a valid integer.'; return; }
+      const res = isPrime(n);
+      if (res.isPrime) document.getElementById('result').textContent = `${n} is a prime number.`;
+      else document.getElementById('result').textContent = `${n} is not a prime number. Factors: ${res.factors.join(' ')}`;
+    });
+  </script>
+</body>
+</html>

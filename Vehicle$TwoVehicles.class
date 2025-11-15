@@ -1,0 +1,20 @@
+// Source code is decompiled from a .class file using FernFlower decompiler (from Intellij IDEA).
+class Vehicle$TwoVehicles {
+   Vehicle$TwoVehicles(final Vehicle var1) {
+   }
+
+   public static void main(String[] var0) {
+      Vehicle var1 = new Vehicle();
+      Vehicle var2 = new Vehicle();
+      var1.passengers = 7;
+      var1.fuelcap = 16;
+      var1.mpg = 21;
+      var2.passengers = 2;
+      var2.fuelcap = 14;
+      var2.mpg = 12;
+      int var3 = var1.fuelcap * var1.mpg;
+      int var4 = var2.fuelcap * var2.mpg;
+      System.out.println("Minivan can carry " + var1.passengers + " passengers for a range of " + var3);
+      System.out.println("Sportscar can carry " + var2.passengers + " passengers for a range of " + var4);
+   }
+}
