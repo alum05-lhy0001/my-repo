@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Simple Calculator</title>
+  <style>
+    body { font-family: Segoe UI, Arial, sans-serif; background:#f7f7f7; padding:20px }
+    .card { background:white; padding:20px; border-radius:8px; max-width:420px; box-shadow:0 6px 18px rgba(0,0,0,0.06) }
+    input, select, button { font-size:16px; padding:8px; margin:6px 0; width:100% }
+    .row { display:flex; gap:8px }
+    .row input, .row select { flex:1 }
+    #result { margin-top:12px; font-weight:700 }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Calculator</h1>
+    <p>Enter two numbers and choose an operator. Type Q to quit if using the CLI version.</p>
+
+    <div class="row">
+      <input id="a" type="number" step="any" placeholder="First number">
+      <select id="op">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+      </select>
+      <input id="b" type="number" step="any" placeholder="Second number">
+    </div>
+
+    <button id="calc">Calculate</button>
+    <div id="result" aria-live="polite"></div>
+  </div>
+
+  <script>
+    function compute(a, op, b) {
+      let result;
+      switch (op) {
+        case '+': result = a + b; break;
+        case '-': result = a - b; break;
+        case '*': result = a * b; break;
+        case '/':
+          if (b === 0) return { ok:false, error: 'Error: Division by zero.' };
+          result = a / b; break;
+        default: return { ok:false, error: `Unknown operator: ${op}` };
+      }
+      return { ok:true, result };
+    }
+
+    function formatResult(r) {
+      if (Number.isFinite(r) && Number.isInteger(r)) return r.toString();
+      return r;
+    }
+
+    document.getElementById('calc').addEventListener('click', ()=>{
+      const aVal = document.getElementById('a').value;
+      const bVal = document.getElementById('b').value;
+      const op = document.getElementById('op').value;
+      const out = document.getElementById('result');
+
+      const a = parseFloat(aVal);
+      const b = parseFloat(bVal);
+      if (!isFinite(a)) { out.textContent = 'Please enter a valid first number.'; return; }
+      if (!isFinite(b)) { out.textContent = 'Please enter a valid second number.'; return; }
+
+      const r = compute(a, op, b);
+      if (!r.ok) out.textContent = r.error;
+      else out.textContent = 'Result = ' + formatResult(r.result);
+    });
+
+    // allow Enter to calculate when focus in inputs
+    ['a','b'].forEach(id=>{
+      document.getElementById(id).addEventListener('keydown', (e)=>{ if (e.key === 'Enter') document.getElementById('calc').click(); });
+    });
+  </script>
+</body>
+</html>
