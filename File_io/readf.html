@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ReadF - Display File</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 16px; }
+    #controls { margin-bottom: 12px; }
+    #output { white-space: pre-wrap; background:#f7f7f7; padding:12px; border:1px solid #ddd; max-height:60vh; overflow:auto }
+  </style>
+</head>
+<body>
+  <h1>ReadF — Display a file in the browser</h1>
+  <div id="controls">
+    <label>Filename: <input id="fileInput" type="text" placeholder="Enter filename (e.g. test1.txt)" style="width:300px"></label>
+    <!-- Search comes before Load per request -->
+    <label style="margin-left:8px">Search: <input id="searchInput" type="text" placeholder="search text" style="width:200px"></label>
+    <button id="searchBtn" disabled>Search</button>
+    <button id="loadBtn">Load</button>
+    <div>Using: <strong id="filename"></strong></div>
+  </div>
+
+  <section id="pdf-list-section">
+    <h2>Available PDFs</h2>
+    <div id="pdf-list" style="max-height:240px;overflow:auto;background:#fff;padding:8px;border:1px solid #eee">
+      <ul style="margin:0;padding-left:18px">
+        <li><a href="./readf.html?file=3D%20Printing%20with%20SketchUp.pdf">3D Printing with SketchUp.pdf</a></li>
+        <li><a href="./readf.html?file=Asynchronous%20Android%20Programming%2C%202nd%20Edition.pdf">Asynchronous Android Programming, 2nd Edition.pdf</a></li>
+        <li><a href="./readf.html?file=Beautiful%20JavaScript.pdf">Beautiful JavaScript.pdf</a></li>
+        <li><a href="./readf.html?file=Bioinformatics%20with%20Python%20Cookbook.pdf">Bioinformatics with Python Cookbook.pdf</a></li>
+        <li><a href="./readf.html?file=Cyber%20Security%20Policy%20Guidebook.pdf">Cyber Security Policy Guidebook.pdf</a></li>
+        <li><a href="./readf.html?file=Cyber%20Security.pdf">Cyber Security.pdf</a></li>
+        <li><a href="./readf.html?file=Effective%20JavaScript.pdf">Effective JavaScript.pdf</a></li>
+        <li><a href="./readf.html?file=Get%20Fit%20with%20Apple%20Watch.pdf">Get Fit with Apple Watch.pdf</a></li>
+        <li><a href="./readf.html?file=Learning%20iOS%20Security%20%281%29.pdf">Learning iOS Security (1).pdf</a></li>
+        <li><a href="./readf.html?file=Learning%20iOS%20Security.pdf">Learning iOS Security.pdf</a></li>
+        <li><a href="./readf.html?file=Learning%20to%20Love%20Data%20Science.pdf">Learning to Love Data Science.pdf</a></li>
+        <li><a href="./readf.html?file=Node.js%20for%20PHP%20Developers.pdf">Node.js for PHP Developers.pdf</a></li>
+        <li><a href="./readf.html?file=OpenCV%20Computer%20Vision%20with%20Python.pdf">OpenCV Computer Vision with Python.pdf</a></li>
+        <li><a href="./readf.html?file=PHP%20CLI.pdf">PHP CLI.pdf</a></li>
+        <li><a href="./readf.html?file=PHP-%20The%20Good%20Parts.pdf">PHP- The Good Parts.pdf</a></li>
+        <li><a href="./readf.html?file=Practical%20Google%20Analytics%20and%20Google%20Tag%20Manager%20for%20Developers.pdf">Practical Google Analytics and Google Tag Manager for Developers.pdf</a></li>
+        <li><a href="./readf.html?file=Programming%20iOS%209.pdf">Programming iOS 9.pdf</a></li>
+        <li><a href="./readf.html?file=Project%20Management%20Handbook.pdf">Project Management Handbook.pdf</a></li>
+        <li><a href="./readf.html?file=sec_filings.pdf">sec_filings.pdf</a></li>
+        <li><a href="./readf.html?file=test1.pdf">test1.pdf</a></li>
+        <li><a href="./readf.html?file=test2.pdf">test2.pdf</a></li>
+        <li><a href="./readf.html?file=The%20Android%20Game%20Developer%27s%20Handbook.pdf">The Android Game Developer's Handbook.pdf</a></li>
+        <li><a href="./readf.html?file=The%20Visual%20Organization.pdf">The Visual Organization.pdf</a></li>
+        <li><a href="./readf.html?file=The%20Windows%2010%20Accessibility%20Handbook.pdf">The Windows 10 Accessibility Handbook.pdf</a></li>
+        <li><a href="./readf.html?file=Thinking%20Ahead.pdf">Thinking Ahead.pdf</a></li>
+        <li><a href="./readf.html?file=Typed%20PHP.pdf">Typed PHP.pdf</a></li>
+        <li><a href="./readf.html?file=User%20Group%20Leadership.pdf">User Group Leadership.pdf</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <div id="embed"></div>
+  <div id="link" style="margin:8px 0"></div>
+  <pre id="output">Loading...</pre>
+
+  <p>
+    Notes:
+    <ul>
+      <li>The page fetches files relative to this HTML file. Example: <code>readf.html?file=test1.txt</code>.</li>
+      <li>For security, browsers block fetching local files from <code>file://</code>. Run a local static server (instructions below).</li>
+      <li>Text files are shown inline; PDFs/images are embedded; other binaries offered for download.</li>
+    </ul>
+  </p>
+
+  <h3>Start a quick static server (PowerShell)</h3>
+  <pre><code># From the repository root, run one of:
+# Simple Python server (if Python installed):
+python -m http.server 8000
+
+# Or PowerShell's built-in static server (PowerShell 5.1):
+# Install `http-server` with Node/npm then run:
+npx http-server -p 8000
+
+# Then open: http://localhost:8000/File_io/readf.html?file=test1.txt
+</code></pre>
+
+  <!-- PDF.js from CDN to extract searchable text from PDFs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script>
+    // configure pdfjs worker
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    }
+  </script>
+  <script src="./ReadF.js"></script>
+</body>
+</html>
